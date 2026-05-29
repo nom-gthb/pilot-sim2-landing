@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DocuSign – Sign In</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #F2F4F4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #3B454F;
+  }
+
+  /* ── Top nav ── */
+  .topnav {
+    background: #26374A;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .topnav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    background: #F5A800;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-wordmark {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+    line-height: 1;
+  }
+  .topnav-links { display: flex; gap: 20px; }
+  .topnav-links a {
+    font-size: 13px;
+    color: #A8B8C8;
+    text-decoration: none;
+  }
+  .topnav-links a:hover { color: #ffffff; }
+
+  /* ── Main layout ── */
+  .main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 16px 40px;
+    gap: 32px;
+  }
+
+  /* ── Document summary panel (left) ── */
+  .doc-panel {
+    width: 320px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .doc-card {
+    background: #ffffff;
+    border: 1px solid #D0D5D8;
+    padding: 20px;
+  }
+  .doc-card-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #8C9499;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 12px;
+  }
+  .doc-title-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #E5E8EA;
+  }
+  .doc-icon-wrap {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .doc-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #26374A;
+    line-height: 1.4;
+    margin-bottom: 3px;
+  }
+  .doc-subtitle { font-size: 12px; color: #6B7780; }
+
+  .doc-meta { display: flex; flex-direction: column; gap: 10px; }
+  .doc-meta-row { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #8C9499;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .meta-value { font-size: 13px; color: #3B454F; font-weight: 500; }
+  .meta-value.urgent { color: #C0392B; font-weight: 700; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFF8E1;
+    border: 1px solid #FFE082;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #7D5C00;
+    margin-top: 14px;
+  }
+
+  /* ── Sign-in card (right) ── */
+  .signin-card {
+    width: 420px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid #D0D5D8;
+    padding: 36px 36px 28px;
+  }
+  .signin-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #26374A;
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+  }
+  .signin-sub {
+    font-size: 13px;
+    color: #6B7780;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #3B454F;
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid #C4CAD0;
+    color: #26374A;
+    background: #ffffff;
+    outline: none;
+    border-radius: 2px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-input:focus {
+    border-color: #0061A0;
+    box-shadow: 0 0 0 2px rgba(0,97,160,0.15);
+  }
+
+  .btn-sign {
+    width: 100%;
+    background: #F5A800;
+    color: #26374A;
+    border: none;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 2px;
+    letter-spacing: 0.2px;
+    margin-bottom: 16px;
+    transition: background 0.15s;
+  }
+  .btn-sign:hover { background: #E09A00; }
+
+  .form-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    margin-bottom: 24px;
+  }
+  .form-links a { color: #0066CC; text-decoration: none; }
+  .form-links a:hover { text-decoration: underline; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: #8C9499;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid #E5E8EA;
+  }
+
+  .btn-sso {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #C4CAD0;
+    padding: 11px;
+    font-size: 13.5px;
+    font-weight: 500;
+    font-family: inherit;
+    color: #3B454F;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn-sso:hover { border-color: #0061A0; background: #F4F8FC; }
+
+  .signin-footer {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #E5E8EA;
+    font-size: 11.5px;
+    color: #8C9499;
+    line-height: 1.7;
+  }
+  .signin-footer a { color: #0066CC; text-decoration: none; }
+
+  /* ── Page footer ── */
+  .pagefooter {
+    background: #26374A;
+    padding: 16px 28px;
+    text-align: center;
+    font-size: 11px;
+    color: #8A9BB0;
+    line-height: 1.8;
+    flex-shrink: 0;
+  }
+  .pagefooter a { color: #8A9BB0; text-decoration: underline; }
+
+  @media (max-width: 800px) {
+    .main { flex-direction: column; align-items: center; padding: 28px 12px; }
+    .doc-panel, .signin-card { width: 100%; max-width: 420px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top nav -->
+<nav class="topnav">
+  <a class="topnav-logo" href="#">
+    <div class="logo-mark">
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2h10l6 5.5V20H2V2z" fill="#26374A"/>
+        <path d="M12 2v5.5h6" fill="none" stroke="#26374A" stroke-width="1"/>
+        <rect x="4.5" y="10" width="7" height="1.5" rx="0.75" fill="#F5A800"/>
+        <rect x="4.5" y="13" width="11" height="1.2" rx="0.6" fill="rgba(255,255,255,0.5)"/>
+        <rect x="4.5" y="16" width="9" height="1.2" rx="0.6" fill="rgba(255,255,255,0.5)"/>
+        <!-- pen nib -->
+        <path d="M13.5 17l3-3 1.5 1.5-3 3-2 .5.5-2z" fill="#F5A800"/>
+      </svg>
+    </div>
+    <span class="logo-wordmark">DocuSign</span>
+  </a>
+  <div class="topnav-links">
+    <a href="#">Help</a>
+    <a href="#">Contact Us</a>
+  </div>
+</nav>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- Document summary panel -->
+  <aside class="doc-panel">
+    <div class="doc-card">
+      <div class="doc-card-label">Document to sign</div>
+
+      <div class="doc-title-row">
+        <div class="doc-icon-wrap">
+          <svg width="30" height="36" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="28" height="34" rx="2" fill="#ffffff" stroke="#D0D5D8" stroke-width="1.5"/>
+            <path d="M19 1v9h9" fill="none" stroke="#D0D5D8" stroke-width="1.5"/>
+            <path d="M19 1l9 9" fill="none" stroke="#D0D5D8" stroke-width="1.5"/>
+            <rect x="5" y="14" width="14" height="2.5" rx="1.25" fill="#0061A0"/>
+            <rect x="5" y="20" width="20" height="1.5" rx="0.75" fill="#E5E8EA"/>
+            <rect x="5" y="24" width="17" height="1.5" rx="0.75" fill="#E5E8EA"/>
+            <rect x="5" y="28" width="12" height="1.5" rx="0.75" fill="#E5E8EA"/>
+          </svg>
+        </div>
+        <div>
+          <div class="doc-title">Q2 Security Compliance Acknowledgement</div>
+          <div class="doc-subtitle">Please DocuSign this document</div>
+        </div>
+      </div>
+
+      <div class="doc-meta">
+        <div class="doc-meta-row">
+          <span class="meta-label">From</span>
+          <span class="meta-value">IT Administration</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="meta-label">Organisation</span>
+          <span class="meta-value">merkur-solutions.de</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="meta-label">Sent</span>
+          <span class="meta-value">Thursday, 29 May 2026</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="meta-label">Expires</span>
+          <span class="meta-value urgent">Today at 17:00 CET</span>
+        </div>
+      </div>
+
+      <div class="status-badge">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <circle cx="5" cy="5" r="4" stroke="#7D5C00" stroke-width="1.3"/>
+          <path d="M5 3v2.5l1.5 1.5" stroke="#7D5C00" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Awaiting your signature
+      </div>
+    </div>
+
+    <!-- Security note -->
+    <div style="background:#ffffff;border:1px solid #D0D5D8;padding:14px 16px;">
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:1px;">
+          <rect x="1" y="7" width="12" height="9" rx="1.5" fill="none" stroke="#8C9499" stroke-width="1.3"/>
+          <path d="M4 7V5a3 3 0 016 0v2" fill="none" stroke="#8C9499" stroke-width="1.3"/>
+          <circle cx="7" cy="11.5" r="1.2" fill="#8C9499"/>
+        </svg>
+        <p style="font-size:11.5px;color:#6B7780;line-height:1.6;">
+          Sign in to view and sign your document securely. DocuSign encrypts all documents and signatures.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sign-in card -->
+  <div class="signin-card">
+    <h1 class="signin-title">Sign in to DocuSign</h1>
+    <p class="signin-sub">Sign in to review and sign your document.</p>
+
+    <div class="form-group">
+      <label class="form-label" for="email">Email address</label>
+      <input class="form-input" type="email" id="email" placeholder="name@company.com" autocomplete="email"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="password">Password</label>
+      <input class="form-input" type="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+    </div>
+
+    <button class="btn-sign" type="button">SIGN IN</button>
+
+    <div class="form-links">
+      <a href="#">Forgot your password?</a>
+      <a href="#">Create account</a>
+    </div>
+
+    <div class="divider">or</div>
+
+    <button class="btn-sso" type="button">Sign in with SSO</button>
+
+    <div class="signin-footer">
+      By signing in you agree to DocuSign's
+      <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.<br>
+      Do not share this link — it is intended only for the original recipient.
+    </div>
+  </div>
+
+</main>
+
+<!-- Page footer -->
+<footer class="pagefooter">
+  <div>
+    <a href="#">Privacy</a> &nbsp;·&nbsp;
+    <a href="#">Terms of Service</a> &nbsp;·&nbsp;
+    <a href="#">Cookie Preferences</a> &nbsp;·&nbsp;
+    <a href="#">Contact Us</a>
+  </div>
+  <div>Copyright &copy; 2026 DocuSign Inc. All rights reserved. &nbsp;·&nbsp; 221 Main Street, Suite 1550, San Francisco, CA 94105</div>
+</footer>
+
+</body>
+</html>
